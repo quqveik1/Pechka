@@ -11,10 +11,13 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = HeatModeSelectScreenName
+        startDestination = PermissionsScreenTag
     ) {
         composable(HeatModeSelectScreenName) {
             HeatModeSelectScreen(navController = navController)
+        }
+        composable(PermissionsScreenTag) {
+            PermissionsScreen(navController = navController)
         }
     }
 }
