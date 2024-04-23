@@ -1,9 +1,6 @@
 package com.kurlic.pechka.ui.screens
 
-import android.os.Build
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,16 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.kurlic.pechka.back.androidapi.RequestAllPermissions
+import com.kurlic.pechka.MainActivity
 
 const val PermissionsScreenTag = "PermissionsScreen"
 
 @Composable
 @Preview
 fun PermissionsScreen(navController: NavController = rememberNavController()) {
-    val allPermissionGranted = remember { mutableStateOf(false) }
+    val allPermissionGranted = remember { mutableStateOf<Boolean?>(null) }
+    val context = LocalContext.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         val scrollState = rememberScrollState()
@@ -47,6 +43,9 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
             )
         }
 
+        if(allPermissionGranted.value == true) {
+            Toast.makeText(context, "VBU", Toast.LENGTH_SHORT).show();
+        }
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -54,7 +53,7 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
                 .padding(16.dp)
         ) {
             Button(onClick = {
-                //RequestAllPermissions(isAllPermissionsGranted = allPermissionGranted)
+                (context as MainActivity).permissionManager.requestAllPermissions(isGranted = allPermissionGranted)
             }) {
                 Text("Продолжить")
             }
