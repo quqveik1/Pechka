@@ -14,6 +14,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,23 +25,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.kurlic.pechka.back.androidapi.RequestAllPermissions
 
 const val PermissionsScreenTag = "PermissionsScreen"
 
 @Composable
 @Preview
 fun PermissionsScreen(navController: NavController = rememberNavController()) {
-    val con = LocalContext.current
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                Toast.makeText(con, "NALIVAI", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(con, "OTKAZ", Toast.LENGTH_SHORT).show()
-            }
-        }
-    )
+    val allPermissionGranted = remember { mutableStateOf(false) }
+
     Column(modifier = Modifier.fillMaxSize()) {
         val scrollState = rememberScrollState()
         Box(
@@ -49,9 +43,7 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
                 .verticalScroll(scrollState)
         ) {
             Text(
-                text = "Длинный текст, который может занимать несколько экранов и требовать прокрутки для полного просмотра. " +
-                        "Здесь может быть ваше соглашение, информация о разрешениях или другой информационный текст, " +
-                        "который необходимо отобразить пользователю. При необходимости текст будет прокручиваться."
+                text = "Длинный текст, который может занимать несколько экранов и требовать прокрутки для полного просмотра. " + "Здесь может быть ваше соглашение, информация о разрешениях или другой информационный текст, " + "который необходимо отобразить пользователю. При необходимости текст будет прокручиваться."
             )
         }
 
@@ -61,16 +53,9 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Button(
-                onClick = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        permissionLauncher.launch(android.Manifest.permission.FOREGROUND_SERVICE)
-                    }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-                    }
-                }
-            ) {
+            Button(onClick = {
+                //RequestAllPermissions(isAllPermissionsGranted = allPermissionGranted)
+            }) {
                 Text("Продолжить")
             }
         }
