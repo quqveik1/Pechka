@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
@@ -14,17 +15,15 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
-import com.kurlic.pechka.common.debug.makeToast
+
+const val ForegroundServiceBroadCast = "com.kurlic.pechka.vbuz"
 
 class HeatForegroundService : Service() {
     private var serviceLooper: Looper? = null
     private var serviceHandler: ServiceHandler? = null
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -34,17 +33,20 @@ class HeatForegroundService : Service() {
             serviceLooper = looper
             serviceHandler = ServiceHandler(looper)
         }
+        val intent = Intent(ForegroundServiceBroadCast)
+        sendBroadcast(intent)
     }
 
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
 
         override fun handleMessage(msg: Message) {
+
             try {
                 Log.d(
                     "vbuz",
                     "service started"
                 )
-                Thread.sleep(20000)
+                Thread.sleep(60000)
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 Log.e(
@@ -56,6 +58,7 @@ class HeatForegroundService : Service() {
                 "vbuz",
                 "end"
             )
+
             stopSelf(msg.arg1)
         }
     }
@@ -77,6 +80,16 @@ class HeatForegroundService : Service() {
         }
 
         return START_NOT_STICKY
+    }
+
+    private val binder = LocalBinder()
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    inner class LocalBinder : Binder() {
+        fun getService(): HeatForegroundService = this@HeatForegroundService
     }
 
     private val HeatServiceChannelID = "vbu"

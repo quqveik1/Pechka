@@ -1,5 +1,10 @@
 package com.kurlic.pechka
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,15 +13,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.kurlic.pechka.back.androidapi.permission.PermissionManager
+import com.kurlic.pechka.back.services.ServiceManager
+import com.kurlic.pechka.common.debug.makeToast
 import com.kurlic.pechka.ui.screens.Navigation
 import com.kurlic.pechka.ui.theme.PechkaTheme
 
 class MainActivity : ComponentActivity() {
     lateinit var permissionManager: PermissionManager
+    lateinit var serviceManager: ServiceManager
+    override fun onStart() {
+        super.onStart()
+        permissionManager = PermissionManager(this)
+        serviceManager = ServiceManager(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        permissionManager = PermissionManager(this)
         setContent {
             PechkaTheme {
                 Surface(
@@ -32,5 +44,9 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         permissionManager.checkAllPermissions()
+    }
+
+    override fun onStop() {
+        super.onStop()
     }
 }

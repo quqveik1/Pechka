@@ -30,7 +30,7 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
         StyledButton(
             text = stringResource(id = R.string.start_heating_service) +"!",
             onClick = {
-                makeToast(context, "Service must start")
+                //makeToast(context, "Service must start")
                 val intent = Intent(context, HeatForegroundService::class.java)
                 if(Build.VERSION.SDK_INT >= 26) {
                     context.startForegroundService(intent)
