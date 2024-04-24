@@ -11,8 +11,11 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = PermissionsScreenTag
+        startDestination = MainScreenTag
     ) {
+        composable(MainScreenTag) {
+            MainScreen(navController = navController)
+        }
         composable(HeatModeSelectScreenName) {
             HeatModeSelectScreen(navController = navController)
         }

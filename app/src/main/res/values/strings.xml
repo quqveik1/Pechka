@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Pechka</string>
+    <string name="start">Start</string>
+    <string name="start_heating_service">Start heating service</string>
+    <string name="continue_app">Continue</string>
+    <string name="notification_settings">Notification settings</string>
+    <string name="permissions_soft_request">App needs permissions to work correctly and warm you</string>
+    <string name="user_declines_permission">You have declined some permissions. App won\'t work without them. Please accept them manually by clicking a button or restart app</string>
 </resources>
