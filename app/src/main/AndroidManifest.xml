@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
 
     <application
         android:allowBackup="true"
@@ -28,7 +29,7 @@
         </activity>
         <service
             android:name=".back.services.HeatForegroundService"
-            android:foregroundServiceType="specialUse" />
+            android:foregroundServiceType="dataSync"/>
     </application>
 
 </manifest>
