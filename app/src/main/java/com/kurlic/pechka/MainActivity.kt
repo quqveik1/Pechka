@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.kurlic.pechka.back.androidapi.PermissionManager
+import com.kurlic.pechka.back.androidapi.permission.PermissionManager
 import com.kurlic.pechka.ui.screens.Navigation
 import com.kurlic.pechka.ui.theme.PechkaTheme
 

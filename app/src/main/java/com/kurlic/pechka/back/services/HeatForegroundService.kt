@@ -12,6 +12,7 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
@@ -30,7 +31,6 @@ class HeatForegroundService : Service() {
         HandlerThread("ServiceStartArguments").apply {
             start()
 
-            // Get the HandlerThread's Looper and use it for our Handler
             serviceLooper = looper
             serviceHandler = ServiceHandler(looper)
         }
@@ -40,11 +40,22 @@ class HeatForegroundService : Service() {
 
         override fun handleMessage(msg: Message) {
             try {
-                Thread.sleep(10000)
+                Log.d(
+                    "vbuz",
+                    "service started"
+                )
+                Thread.sleep(20000)
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
+                Log.e(
+                    "vbuz",
+                    "thread interrupt"
+                )
             }
-
+            Log.d(
+                "vbuz",
+                "end"
+            )
             stopSelf(msg.arg1)
         }
     }
@@ -75,7 +86,7 @@ class HeatForegroundService : Service() {
             val serviceChannel = NotificationChannel(
                 HeatServiceChannelID,
                 "Foreground Service Channel",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
@@ -94,14 +105,13 @@ class HeatForegroundService : Service() {
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(
+        val notification = NotificationCompat.Builder(
             this,
             HeatServiceChannelID
-        )
-            .setContentTitle("Heat Service")
-            .setContentText("The service is running...")
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentIntent(pendingIntent)
-            .build()
+        ).setContentTitle("Heat ывывыв").setContentText("The service is running...")
+            .setSmallIcon(R.drawable.ic_launcher_background).setContentIntent(pendingIntent)
+            .setOngoing(true).setAutoCancel(false).build()
+
+        return notification
     }
 }

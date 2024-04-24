@@ -1,5 +1,6 @@
 package com.kurlic.pechka.ui.screens
 
+import android.Manifest
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -17,8 +18,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
-import com.kurlic.pechka.back.androidapi.openSettings
-import com.kurlic.pechka.back.androidapi.permissionToActionMap
+import com.kurlic.pechka.back.androidapi.permission.openSettings
+import com.kurlic.pechka.back.androidapi.permission.permissionToActionMap
 import com.kurlic.pechka.ui.elements.StyledButton
 import com.kurlic.pechka.ui.elements.StyledDivider
 import com.kurlic.pechka.ui.elements.StyledText
@@ -65,7 +66,7 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         openSettings(
-                            permissionToActionMap[android.Manifest.permission.POST_NOTIFICATIONS]!!,
+                            permissionToActionMap[Manifest.permission.POST_NOTIFICATIONS]!!,
                             activity = context
                         )
                     })

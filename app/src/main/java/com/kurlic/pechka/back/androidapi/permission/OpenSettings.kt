@@ -1,4 +1,4 @@
-package com.kurlic.pechka.back.androidapi
+package com.kurlic.pechka.back.androidapi.permission
 
 import android.content.Intent
 import android.os.Build

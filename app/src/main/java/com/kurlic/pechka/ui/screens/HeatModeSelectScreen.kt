@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kurlic.pechka.R
 import com.kurlic.pechka.back.services.HeatForegroundService
+import com.kurlic.pechka.common.debug.makeToast
 import com.kurlic.pechka.ui.elements.StyledButton
 
 const val HeatModeSelectScreenName = "HeatModeSelectScreen"
@@ -27,8 +28,9 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
         contentAlignment = Alignment.Center
     ) {
         StyledButton(
-            text = stringResource(id = R.string.start_heating_service),
+            text = stringResource(id = R.string.start_heating_service) +"!",
             onClick = {
+                makeToast(context, "Service must start")
                 val intent = Intent(context, HeatForegroundService::class.java)
                 if(Build.VERSION.SDK_INT >= 26) {
                     context.startForegroundService(intent)

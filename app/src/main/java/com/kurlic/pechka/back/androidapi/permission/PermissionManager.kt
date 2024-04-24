@@ -1,4 +1,4 @@
-package com.kurlic.pechka.back.androidapi
+package com.kurlic.pechka.back.androidapi.permission
 
 import android.content.pm.PackageManager
 import android.widget.Toast
@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
