@@ -7,17 +7,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.kurlic.pechka.MainActivity
+import com.kurlic.pechka.R
 import com.kurlic.pechka.ui.elements.StyledButton
 
 const val MainScreenTag = "MainScreen"
 
 @Composable
-fun MainScreen(navController: NavController) {
+@Preview
+fun MainScreen(navController: NavController = rememberNavController()) {
     val activity = (LocalContext.current as MainActivity)
     val res = activity.permissionManager.checkAllPermissions()
-    if(!res) {
+    if (!res) {
         navController.navigate(PermissionsScreenTag) {
             popUpTo(PermissionsScreenTag)
         }
@@ -27,7 +32,7 @@ fun MainScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         StyledButton(
-            text = "Start",
+            text = stringResource(id = R.string.start),
             onClick = { navController.navigate(HeatModeSelectScreenName) })
     }
 }

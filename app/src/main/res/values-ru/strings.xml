@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pechka</string>
+    <string name="start">Старт</string>
+    <string name="start_heating_service">Запустить сервис обогрева</string>
+    <string name="continue_app">Продолжить</string>
+    <string name="notification_settings">Настройки уведомлений</string>
+    <string name="permissions_soft_request">Приложению необходим доступ к некоторым разрешениям, чтобы оно корректно работало</string>
+    <string name="user_declines_permission">Вы не предоставили необходимые разрешения. Приложение без этого не будет работать. Сделайте это в ручном режиме или перезапустите приложение.</string>
+</resources>
