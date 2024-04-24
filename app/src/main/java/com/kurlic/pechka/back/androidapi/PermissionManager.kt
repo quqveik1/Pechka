@@ -6,18 +6,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class PermissionManager(val activity: ComponentActivity) {
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
-    private lateinit var isGranted: MutableState<Boolean?>
+    private lateinit var isGrantedAfterRequest: MutableState<Boolean?>
+    private val _areAllLifePermissionsGranted = MutableLiveData<Boolean?>(null)
+    val areAllLifePermissionsGranted: LiveData<Boolean?> = _areAllLifePermissionsGranted
 
     init {
         setupPermissionRequest()
     }
 
-    fun setupPermissionRequest() {
+    private fun setupPermissionRequest() {
         permissionLauncher =
             activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
                 if (isGranted) {
@@ -33,26 +38,15 @@ class PermissionManager(val activity: ComponentActivity) {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                this.isGranted.value = isGranted
+                this.isGrantedAfterRequest.value = isGranted
+                _areAllLifePermissionsGranted.postValue(isGranted)
             }
 
         multiplePermissionLauncher =
             activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 val allGranted = permissions.entries.all { it.value }
-                if (allGranted) {
-                    Toast.makeText(
-                        activity,
-                        "Все разрешения предоставлены",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        "Некоторые разрешения отклонены",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                this.isGranted.value = allGranted
+                this.isGrantedAfterRequest.value = allGranted
+                _areAllLifePermissionsGranted.postValue(allGranted)
             }
     }
 
@@ -60,7 +54,7 @@ class PermissionManager(val activity: ComponentActivity) {
         permissionName: String,
         isGranted: MutableState<Boolean?>
     ) {
-        this.isGranted = isGranted
+        this.isGrantedAfterRequest = isGranted
         permissionLauncher.launch(permissionName)
     }
 
@@ -68,7 +62,7 @@ class PermissionManager(val activity: ComponentActivity) {
         permissions: Array<String>,
         isGranted: MutableState<Boolean?>
     ) {
-        this.isGranted = isGranted
+        this.isGrantedAfterRequest = isGranted
         multiplePermissionLauncher.launch(permissions)
     }
 
@@ -91,6 +85,8 @@ class PermissionManager(val activity: ComponentActivity) {
     }
 
     fun checkAllPermissions(): Boolean {
-        return checkAllPermissions(lifePermissions)
+        val res = checkAllPermissions(lifePermissions)
+        _areAllLifePermissionsGranted.postValue(res)
+        return res
     }
 }

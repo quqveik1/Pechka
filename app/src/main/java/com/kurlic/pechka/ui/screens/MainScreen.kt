@@ -18,7 +18,9 @@ fun MainScreen(navController: NavController) {
     val activity = (LocalContext.current as MainActivity)
     val res = activity.permissionManager.checkAllPermissions()
     if(!res) {
-        navController.navigate(PermissionsScreenTag)
+        navController.navigate(PermissionsScreenTag) {
+            popUpTo(PermissionsScreenTag)
+        }
     }
     Box(
         modifier = Modifier.fillMaxSize(),

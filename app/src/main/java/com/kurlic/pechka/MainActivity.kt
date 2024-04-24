@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.kurlic.pechka.back.androidapi.PermissionManager
+import com.kurlic.pechka.common.debug.makeToast
 import com.kurlic.pechka.ui.screens.Navigation
 import com.kurlic.pechka.ui.theme.PechkaTheme
 
@@ -27,5 +28,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        permissionManager.checkAllPermissions()
+        makeToast(this, "lei")
     }
 }
