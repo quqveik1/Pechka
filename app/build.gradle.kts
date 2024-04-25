@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.accompanist)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.compose.livedata)
+    implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

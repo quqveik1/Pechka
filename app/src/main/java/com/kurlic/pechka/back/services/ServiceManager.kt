@@ -3,15 +3,18 @@ package com.kurlic.pechka.back.services
 import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
+import androidx.lifecycle.ViewModelProvider
 import com.kurlic.pechka.MainActivity
 
 class ServiceManager(val activity: MainActivity) {
 
-    val serviceMessagesReceiver = ServiceMessagesReceiver()
+    private val serviceMessagesReceiver = ServiceMessagesReceiver()
+    private val serviceViewModel = ViewModelProvider(activity)[ServiceViewModel::class.java]
 
     init {
+        serviceViewModel.loadData(activity)
         val filter = IntentFilter(ForegroundServiceBroadCast)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             activity.registerReceiver(
                 serviceMessagesReceiver,
                 filter,
