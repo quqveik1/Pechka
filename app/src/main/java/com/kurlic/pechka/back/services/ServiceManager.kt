@@ -6,7 +6,7 @@ import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import com.kurlic.pechka.MainActivity
 
-class ServiceManager(val activity: MainActivity) {
+class ServiceManager(private val activity: MainActivity) {
 
     private val serviceMessagesReceiver = ServiceMessagesReceiver()
     private val serviceViewModel = ViewModelProvider(activity)[ServiceViewModel::class.java]

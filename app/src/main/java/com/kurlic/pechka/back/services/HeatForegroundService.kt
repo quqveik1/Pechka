@@ -45,14 +45,12 @@ class HeatForegroundService : Service() {
             serviceLooper = looper
             serviceHandler = ServiceHandler(looper)
         }
-        serviceData.value!!.state = ServiceState.Active
+        serviceData.postValue(ServiceData(ServiceState.Active))
     }
 
     private fun createObserver() {
         serviceData.observeForever { data ->
-            CoroutineScope(Dispatchers.IO).launch {
-                saveData(data)
-            }
+            saveData(data)
         }
     }
 
@@ -87,7 +85,7 @@ class HeatForegroundService : Service() {
                     DebugTag,
                     "service started"
                 )
-                Thread.sleep(10000)
+                Thread.sleep(3000)
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 Log.e(
@@ -100,8 +98,7 @@ class HeatForegroundService : Service() {
                 "end"
             )
 
-            serviceData.value!!.state = ServiceState.Stopped
-            saveData(serviceData.value!!)
+            serviceData.postValue(ServiceData(ServiceState.Stopped))
             stopSelf(msg.arg1)
         }
     }
