@@ -1,4 +1,4 @@
-package com.kurlic.pechka.back.services
+package com.kurlic.pechka.back.services.heatservice
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -7,8 +7,6 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
@@ -19,16 +17,13 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 const val ForegroundServiceBroadCast = "com.kurlic.pechka.HeatForegroundService"
 const val ForegroundServiceFolder = "HeatForegroundService"
 const val ForegroundServiceFolderDataTag = "HeatForegroundService"
 const val DebugTag = "HeatForegroundService"
+const val StopIntentTag = "StopHeatForegroundService"
 
 class HeatForegroundService : Service() {
     private var serviceLooper: Looper? = null
@@ -36,16 +31,11 @@ class HeatForegroundService : Service() {
 
     private var serviceData = MutableLiveData(ServiceData(ServiceState.Launching))
 
+    private var needsToRun = true
+
     override fun onCreate() {
         super.onCreate()
         createObserver()
-        HandlerThread("ServiceStartArguments").apply {
-            start()
-
-            serviceLooper = looper
-            serviceHandler = ServiceHandler(looper)
-        }
-        serviceData.postValue(ServiceData(ServiceState.Active))
     }
 
     private fun createObserver() {
@@ -71,28 +61,24 @@ class HeatForegroundService : Service() {
         sendBroadcastToApp()
     }
 
-
     private fun sendBroadcastToApp() {
         val intent = Intent(ForegroundServiceBroadCast)
         sendBroadcast(intent)
     }
 
+    private fun sitInGrusha(totalTime: Long, step: Long) {
+        for (time in 0 .. totalTime step step) {
+            if(!needsToRun) {
+                break
+            }
+            Thread.sleep(step)
+        }
+    }
+
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
 
         override fun handleMessage(msg: Message) {
-            try {
-                Log.d(
-                    DebugTag,
-                    "service started"
-                )
-                Thread.sleep(3000)
-            } catch (e: InterruptedException) {
-                Thread.currentThread().interrupt()
-                Log.e(
-                    DebugTag,
-                    "thread interrupt"
-                )
-            }
+            sitInGrusha(60000, 1000)
             Log.d(
                 DebugTag,
                 "end"
@@ -108,17 +94,28 @@ class HeatForegroundService : Service() {
         flags: Int,
         startId: Int
     ): Int {
-        createNotificationChannel()
-        val notification = getNotification()
-        startForeground(
-            1,
-            notification
-        )
-        serviceHandler?.obtainMessage()?.also { msg ->
-            msg.arg1 = startId
-            serviceHandler?.sendMessage(msg)
-        }
+        val extraData = intent?.extras?.getString(StopIntentTag)
+        if(extraData != null) {
+            needsToRun = false
+        } else {
+            createNotificationChannel()
+            val notification = getNotification()
+            startForeground(
+                1,
+                notification
+            )
+            serviceHandler?.obtainMessage()?.also { msg ->
+                msg.arg1 = startId
+                serviceHandler?.sendMessage(msg)
+            }
+            HandlerThread("ServiceStartArguments").apply {
+                start()
 
+                serviceLooper = looper
+                serviceHandler = ServiceHandler(looper)
+            }
+            serviceData.postValue(ServiceData(ServiceState.Active))
+        }
         return START_NOT_STICKY
     }
 
@@ -141,23 +138,29 @@ class HeatForegroundService : Service() {
     }
 
     private fun getNotification(): Notification {
-        val notificationIntent = Intent(
+
+        val intentStop = Intent(
             this,
-            MainActivity::class.java
+            StopServiceReceiver::class.java
         )
-        val pendingIntent = PendingIntent.getActivity(
+        val pendingIntentStop = PendingIntent.getBroadcast(
             this,
             0,
-            notificationIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            intentStop,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val notification = NotificationCompat.Builder(
             this,
             HeatServiceChannelID
-        ).setContentTitle("Heat ывывыв").setContentText("The service is running...")
-            .setSmallIcon(R.drawable.ic_launcher_background).setContentIntent(pendingIntent)
-            .setOngoing(true).setAutoCancel(false).build()
+        ).setContentTitle(getString(R.string.heat_service_notification_title))
+            .setContentText(getString(R.string.heat_service_notification_text))
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setOngoing(true).setAutoCancel(false).addAction(
+                androidx.core.R.drawable.ic_call_answer,  // Укажите иконку для кнопки
+                "STOOOOP",  // Текст на кнопке
+                pendingIntentStop
+            ).build()
 
         return notification
     }

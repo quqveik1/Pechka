@@ -1,19 +1,19 @@
-package com.kurlic.pechka.back.services
+package com.kurlic.pechka.back.services.client
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.google.gson.Gson
+import com.kurlic.pechka.back.services.heatservice.ForegroundServiceFolder
+import com.kurlic.pechka.back.services.heatservice.ForegroundServiceFolderDataTag
+import com.kurlic.pechka.back.services.heatservice.ServiceData
 
 class ServiceViewModel : ViewModel() {
-    var serviceData by mutableStateOf<ServiceData?>(null)
+    var serviceData = MutableLiveData<ServiceData?>(null)
     init {
         Log.d("ViewModel", "ServiceViewModel created")
     }
@@ -37,9 +37,7 @@ class ServiceViewModel : ViewModel() {
                 str,
                 ServiceData::class.java
             )
-            CoroutineScope(Dispatchers.Main).launch {
-                serviceData = newVal
-            }
+            serviceData.postValue(newVal)
         }
     }
 }

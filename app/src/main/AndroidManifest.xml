@@ -28,8 +28,10 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".back.services.HeatForegroundService"
+            android:name=".back.services.heatservice.HeatForegroundService"
             android:foregroundServiceType="dataSync"/>
+
+        <receiver android:name=".back.services.heatservice.StopServiceReceiver"/>
     </application>
 
 </manifest>

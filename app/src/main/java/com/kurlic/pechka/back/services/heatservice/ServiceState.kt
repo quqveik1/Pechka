@@ -1,4 +1,4 @@
-package com.kurlic.pechka.back.services
+package com.kurlic.pechka.back.services.heatservice
 
 enum class ServiceState(num: Int) {
     Launching(0),

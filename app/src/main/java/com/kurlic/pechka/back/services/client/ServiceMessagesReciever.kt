@@ -1,4 +1,4 @@
-package com.kurlic.pechka.back.services
+package com.kurlic.pechka.back.services.client
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -1,10 +1,11 @@
-package com.kurlic.pechka.back.services
+package com.kurlic.pechka.back.services.client
 
 import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import com.kurlic.pechka.MainActivity
+import com.kurlic.pechka.back.services.heatservice.ForegroundServiceBroadCast
 
 class ServiceManager(private val activity: MainActivity) {
 
