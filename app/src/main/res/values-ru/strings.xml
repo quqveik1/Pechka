@@ -9,4 +9,7 @@
     <string name="user_declines_permission">Вы не предоставили необходимые разрешения. Приложение без этого не будет работать. Сделайте это в ручном режиме или перезапустите приложение.</string>
     <string name="heat_service_notification_text">Сервис работает...</string>
     <string name="heat_service_notification_title">Сервис обогрева</string>
+    <string name="stop">Стоп</string>
+    <string name="service_in_progress">Сервис работает</string>
+    <string name="heat_service_channel_name">Фоновая служба обогрева</string>
 </resources>

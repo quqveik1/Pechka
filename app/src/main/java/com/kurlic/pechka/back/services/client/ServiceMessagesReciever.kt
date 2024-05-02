@@ -11,7 +11,6 @@ import com.kurlic.pechka.common.debug.makeToast
 class ServiceMessagesReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("vbu", "BroadcastBecome")
-        makeToast(context, "ServiceMessagesReceiver")
         val viewModel = ViewModelProvider(context as MainActivity)[ServiceViewModel::class.java]
         viewModel.loadData(context)
     }

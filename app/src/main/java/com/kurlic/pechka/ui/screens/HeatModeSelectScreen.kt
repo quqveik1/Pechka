@@ -1,7 +1,5 @@
 package com.kurlic.pechka.ui.screens
 
-import android.content.Intent
-import android.os.Build
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,9 +15,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
-import com.kurlic.pechka.back.services.heatservice.HeatForegroundService
-import com.kurlic.pechka.back.services.heatservice.ServiceState
 import com.kurlic.pechka.back.services.client.ServiceViewModel
+import com.kurlic.pechka.back.services.heatservice.HeatForegroundService
+import com.kurlic.pechka.back.services.heatservice.HeatServiceReceiver
+import com.kurlic.pechka.back.services.heatservice.ServiceState
+import com.kurlic.pechka.back.services.heatservice.StopServiceTag
 import com.kurlic.pechka.ui.elements.StyledButton
 import com.kurlic.pechka.ui.elements.StyledText
 
@@ -42,22 +42,16 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
             StyledButton(
                 text = stringResource(id = R.string.start_heating_service) + "!",
                 onClick = {
-                    val intent = Intent(
-                        context,
-                        HeatForegroundService::class.java
-                    )
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        context.startForegroundService(intent)
-                    } else {
-                        context.startService(intent)
-                    }
+                    HeatForegroundService.startService(context)
                 })
         } else {
-            Column {
-                StyledText(text = "Service is in Progress")
+            Column(modifier = Modifier.align(Alignment.Center)) {
+                StyledText(text = stringResource(id = R.string.service_in_progress))
                 StyledButton(
-                    text = "Stop",
-                    onClick = { /*TODO*/ })
+                    text = stringResource(id = R.string.stop),
+                    onClick = {
+                        HeatServiceReceiver.sendBroadcastMessage(context, StopServiceTag)
+                    })
             }
         }
     }
