@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
+import com.kurlic.pechka.back.androidapi.permission.PermissionManager
 import com.kurlic.pechka.back.androidapi.permission.openSettings
 import com.kurlic.pechka.back.androidapi.permission.permissionToActionMap
 import com.kurlic.pechka.ui.elements.StyledButton
@@ -33,7 +34,7 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
     val context = LocalContext.current as MainActivity
     val scrollState = rememberScrollState()
     val permissionManager = context.permissionManager
-    val allPermissionGranted = permissionManager.areAllLifePermissionsGranted.observeAsState()
+    val allPermissionGranted = permissionManager.permissionViewModel.areAllLifePermissionsGranted.observeAsState()
 
     if (allPermissionGranted.value == true) {
         leaveScreen(navController)

@@ -78,7 +78,7 @@ class HeatForegroundService : Service() {
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
 
         override fun handleMessage(msg: Message) {
-            sitInGrusha(60000, 1000)
+            sitInGrusha(10000, 1000)
             Log.d(
                 DebugTag,
                 "end"
