@@ -51,7 +51,8 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
                     text = stringResource(id = R.string.stop),
                     onClick = {
                         HeatServiceReceiver.sendBroadcastMessage(context, StopServiceTag)
-                    })
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally))
             }
         }
     }

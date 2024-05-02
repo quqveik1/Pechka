@@ -28,12 +28,11 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 okhttp = {group = "com.squareup.okhttp3", name = "okhttp", version = "4.10.0"}
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "navigationCompose" }
 accompanist = { group = "com.google.accompanist", name = "accompanist-permissions", version = "0.34.0" }
-androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-activity = { group = "androidx.activity", name = "activity-compose" }
 androidx-compose-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 gson = { group = "com.google.code.gson", name = "gson", version = "2.10.1"}
+rx-java = { group = "io.reactivex.rxjava3", name = "rxandroid", version = "3.0.2"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

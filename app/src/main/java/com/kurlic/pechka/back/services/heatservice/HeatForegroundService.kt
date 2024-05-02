@@ -15,10 +15,11 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.kurlic.pechka.R
 import com.kurlic.pechka.common.debug.services.startForegroundService
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 const val ForegroundServiceBroadCast = "com.kurlic.pechka.HeatForegroundService"
 const val ForegroundServiceFolder = "HeatForegroundService"
@@ -30,7 +31,8 @@ class HeatForegroundService : Service() {
     private var serviceLooper: Looper? = null
     private var serviceHandler: ServiceHandler? = null
 
-    private var serviceData = MutableLiveData(ServiceData(ServiceState.Launching))
+    private var serviceData = BehaviorSubject.createDefault(ServiceData(ServiceState.Launching))
+    private val disposables = CompositeDisposable()
 
     private var needsToRun = true
 
@@ -42,9 +44,9 @@ class HeatForegroundService : Service() {
     }
 
     private fun createObserver() {
-        serviceData.observeForever { data ->
+        disposables.add(serviceData.subscribe { data ->
             saveData(data)
-        }
+        })
     }
 
     private fun saveData(data: ServiceData) {
@@ -96,9 +98,14 @@ class HeatForegroundService : Service() {
         }
     }
 
+    override fun onDestroy() {
+        disposables.clear()
+        super.onDestroy()
+    }
+
     fun doStopJob() {
         needsToRun = true
-        serviceData.postValue(ServiceData(ServiceState.Stopped))
+        serviceData.onNext(ServiceData(ServiceState.Stopped))
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf(foregroundNotificationId)
     }
@@ -133,7 +140,7 @@ class HeatForegroundService : Service() {
                 serviceHandler?.sendMessage(msg)
             }
 
-            serviceData.postValue(ServiceData(ServiceState.Active))
+            serviceData.onNext(ServiceData(ServiceState.Active))
         }
         return START_NOT_STICKY
     }
@@ -142,7 +149,7 @@ class HeatForegroundService : Service() {
         return null
     }
 
-    private val HeatServiceChannelID = "HeatServiceChannelID"
+    private val HeatServiceChannelID = "heatServiceChannelID"
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -173,8 +180,8 @@ class HeatForegroundService : Service() {
             HeatServiceChannelID
         ).setContentTitle(getString(R.string.heat_service_notification_title))
             .setContentText(getString(R.string.heat_service_notification_text))
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .setOngoing(true).setAutoCancel(false).addAction(
+            .setSmallIcon(R.drawable.ic_launcher_background).setOngoing(true).setAutoCancel(false)
+            .addAction(
                 0,
                 getString(R.string.stop),
                 pendingIntentStop
