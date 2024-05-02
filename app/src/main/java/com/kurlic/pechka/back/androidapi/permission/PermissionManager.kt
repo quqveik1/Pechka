@@ -15,11 +15,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
-class PermissionManager(val activity: ComponentActivity) {
+class PermissionManager(private val activity: ComponentActivity) {
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var isGrantedAfterRequest: MutableState<Boolean?>
-    var permissionViewModel = ViewModelProvider(activity)[PermissionViewModel::class.java]
+    private var permissionViewModel = ViewModelProvider(activity)[PermissionViewModel::class.java]
 
     init {
         setupPermissionRequest()

@@ -18,8 +18,6 @@ class ServiceViewModel : ViewModel() {
         Log.d("ViewModel", "ServiceViewModel created")
     }
 
-
-
     fun loadData(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             val prefs = context.getSharedPreferences(

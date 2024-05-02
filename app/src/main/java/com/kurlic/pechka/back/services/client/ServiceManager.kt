@@ -15,7 +15,7 @@ class ServiceManager(private val activity: MainActivity) {
     init {
         serviceViewModel.loadData(activity)
         val filter = IntentFilter(ForegroundServiceBroadCast)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             activity.registerReceiver(
                 serviceMessagesReceiver,
                 filter,
