@@ -7,16 +7,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.kurlic.pechka.back.androidapi.PermissionManager
+import com.kurlic.pechka.back.androidapi.permission.PermissionManager
+import com.kurlic.pechka.back.services.client.ServiceManager
 import com.kurlic.pechka.ui.screens.Navigation
 import com.kurlic.pechka.ui.theme.PechkaTheme
 
 class MainActivity : ComponentActivity() {
     lateinit var permissionManager: PermissionManager
+    lateinit var serviceManager: ServiceManager
+    override fun onStart() {
+        super.onStart()
+        permissionManager = PermissionManager(this)
+        serviceManager = ServiceManager(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        permissionManager = PermissionManager(this)
         setContent {
             PechkaTheme {
                 Surface(
@@ -32,5 +38,11 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         permissionManager.checkAllPermissions()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        serviceManager.onStop()
     }
 }

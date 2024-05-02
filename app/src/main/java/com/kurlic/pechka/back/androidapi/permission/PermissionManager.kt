@@ -1,4 +1,4 @@
-package com.kurlic.pechka.back.androidapi
+package com.kurlic.pechka.back.androidapi.permission
 
 import android.content.pm.PackageManager
 import android.widget.Toast
@@ -7,16 +7,19 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCompositionContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
-class PermissionManager(val activity: ComponentActivity) {
+class PermissionManager(private val activity: ComponentActivity) {
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var multiplePermissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var isGrantedAfterRequest: MutableState<Boolean?>
-    private val _areAllLifePermissionsGranted = MutableLiveData<Boolean?>(null)
-    val areAllLifePermissionsGranted: LiveData<Boolean?> = _areAllLifePermissionsGranted
+    private var permissionViewModel = ViewModelProvider(activity)[PermissionViewModel::class.java]
 
     init {
         setupPermissionRequest()
@@ -39,14 +42,14 @@ class PermissionManager(val activity: ComponentActivity) {
                     ).show()
                 }
                 this.isGrantedAfterRequest.value = isGranted
-                _areAllLifePermissionsGranted.postValue(isGranted)
+                permissionViewModel.areAllLifePermissionsGranted.value = isGranted
             }
 
         multiplePermissionLauncher =
             activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
                 val allGranted = permissions.entries.all { it.value }
                 this.isGrantedAfterRequest.value = allGranted
-                _areAllLifePermissionsGranted.postValue(allGranted)
+                permissionViewModel.areAllLifePermissionsGranted.value  = allGranted
             }
     }
 
@@ -86,7 +89,7 @@ class PermissionManager(val activity: ComponentActivity) {
 
     fun checkAllPermissions(): Boolean {
         val res = checkAllPermissions(lifePermissions)
-        _areAllLifePermissionsGranted.postValue(res)
+        permissionViewModel.areAllLifePermissionsGranted.value = res
         return res
     }
 }

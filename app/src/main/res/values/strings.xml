@@ -6,4 +6,9 @@
     <string name="notification_settings">Notification settings</string>
     <string name="permissions_soft_request">App needs permissions to work correctly and warm you</string>
     <string name="user_declines_permission">You have declined some permissions. App won\'t work without them. Please accept them manually by clicking a button or restart app</string>
+    <string name="heat_service_notification_title">Heat service</string>
+    <string name="heat_service_notification_text">The service is running...</string>
+    <string name="stop">Stop</string>
+    <string name="service_in_progress">Service is in progress</string>
+    <string name="heat_service_channel_name">Heat Foreground service</string>
 </resources>
