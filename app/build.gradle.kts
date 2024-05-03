@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.compose.livedata)
     implementation(libs.gson)
     implementation(libs.rx.java)
+    implementation(libs.androidx.paging.common.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
