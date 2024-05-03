@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.rx.java)
     implementation(libs.androidx.paging.common.android)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
