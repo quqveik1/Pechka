@@ -5,13 +5,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-@Composable
-fun Navigation() {
+@Composable fun Navigation() {
     val navController = rememberNavController()
 
     NavHost(
-        navController = navController,
-        startDestination = MainScreenTag
+        navController = navController, startDestination = TestScreenTag
     ) {
         composable(MainScreenTag) {
             MainScreen(navController = navController)
@@ -21,6 +19,9 @@ fun Navigation() {
         }
         composable(PermissionsScreenTag) {
             PermissionsScreen(navController = navController)
+        }
+        composable(TestScreenTag) {
+            TestScreen()
         }
     }
 }

@@ -16,9 +16,7 @@ import com.kurlic.pechka.ui.elements.StyledButton
 
 const val MainScreenTag = "MainScreen"
 
-@Composable
-@Preview
-fun MainScreen(navController: NavController = rememberNavController()) {
+@Composable @Preview fun MainScreen(navController: NavController = rememberNavController()) {
     val activity = (LocalContext.current as MainActivity)
     val res = activity.permissionManager.checkAllPermissions()
     if (!res) {
@@ -27,11 +25,9 @@ fun MainScreen(navController: NavController = rememberNavController()) {
         }
     }
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
-        StyledButton(
-            text = stringResource(id = R.string.start),
-            onClick = { navController.navigate(HeatModeSelectScreenName) })
+        StyledButton(text = stringResource(id = R.string.start),
+                     onClick = { navController.navigate(HeatModeSelectScreenName) })
     }
 }

@@ -30,9 +30,7 @@ import com.kurlic.pechka.ui.elements.StyledText
 
 const val PermissionsScreenTag = "PermissionsScreen"
 
-@Composable
-@Preview
-fun PermissionsScreen(navController: NavController = rememberNavController()) {
+@Composable @Preview fun PermissionsScreen(navController: NavController = rememberNavController()) {
     val allPermissionGrantedAfterRequest = remember { mutableStateOf<Boolean?>(null) }
     val context = LocalContext.current as MainActivity
     val scrollState = rememberScrollState()
@@ -67,24 +65,24 @@ fun PermissionsScreen(navController: NavController = rememberNavController()) {
                 )
                 StyledDivider()
                 StyledButton(text = stringResource(R.string.notification_settings),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            openSettings(
-                                permissionToActionMap[Manifest.permission.POST_NOTIFICATIONS]!!,
-                                activity = context
-                            )
-                        }
-                    })
+                             modifier = Modifier.align(Alignment.CenterHorizontally),
+                             onClick = {
+                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                     openSettings(
+                                         permissionToActionMap[Manifest.permission.POST_NOTIFICATIONS]!!,
+                                         activity = context
+                                     )
+                                 }
+                             })
             }
 
             else -> {
                 StyledDivider()
                 StyledButton(text = stringResource(R.string.continue_app),
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {
-                        context.permissionManager.requestAllPermissions(isGranted = allPermissionGrantedAfterRequest)
-                    })
+                             modifier = Modifier.align(Alignment.CenterHorizontally),
+                             onClick = {
+                                 context.permissionManager.requestAllPermissions(isGranted = allPermissionGrantedAfterRequest)
+                             })
             }
         }
     }

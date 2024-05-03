@@ -10,8 +10,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.kurlic.pechka.R
 
-@Composable
-fun StyledText(
+@Composable fun StyledText(
     text: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = dimensionResource(id = R.dimen.text_size_standard).value.sp

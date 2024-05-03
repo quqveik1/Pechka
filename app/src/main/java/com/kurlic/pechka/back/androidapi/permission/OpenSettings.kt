@@ -4,10 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.activity.ComponentActivity
 
-fun openSettings(
-    stringAction: String,
-    activity: ComponentActivity
-) {
+fun openSettings(stringAction: String, activity: ComponentActivity) {
     val intent = Intent().apply {
         action = stringAction
 

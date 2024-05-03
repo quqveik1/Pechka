@@ -12,7 +12,9 @@ val lifePermissions: Array<String> by lazy {
 
 val permissionToActionMap: Map<String, String> by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        mapOf(android.Manifest.permission.POST_NOTIFICATIONS to "android.settings.APP_NOTIFICATION_SETTINGS")
+        mapOf(
+            android.Manifest.permission.POST_NOTIFICATIONS to "android.settings.APP_NOTIFICATION_SETTINGS"
+        )
     } else {
         mapOf()
     }

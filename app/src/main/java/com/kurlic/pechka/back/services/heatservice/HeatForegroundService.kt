@@ -50,17 +50,11 @@ class HeatForegroundService : Service() {
     }
 
     private fun saveData(data: ServiceData) {
-        val prefs = getSharedPreferences(
-            ForegroundServiceFolder,
-            Context.MODE_PRIVATE
-        )
+        val prefs = getSharedPreferences(ForegroundServiceFolder, Context.MODE_PRIVATE)
         val editor = prefs.edit()
         val gson = Gson()
         val json = gson.toJson(data)
-        editor.putString(
-            ForegroundServiceFolderDataTag,
-            json
-        )
+        editor.putString(ForegroundServiceFolderDataTag, json)
         editor.apply()
 
         sendBroadcastToApp()
@@ -71,10 +65,7 @@ class HeatForegroundService : Service() {
         sendBroadcast(intent)
     }
 
-    private fun sitInGrusha(
-        totalTime: Long,
-        stepT: Long
-    ) {
+    private fun sitInGrusha(totalTime: Long, stepT: Long) {
         for (time in 0..totalTime step stepT) {
             if (!needsToRun) {
                 break
@@ -86,14 +77,8 @@ class HeatForegroundService : Service() {
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
 
         override fun handleMessage(msg: Message) {
-            sitInGrusha(
-                10000,
-                1000
-            )
-            Log.d(
-                DebugTag,
-                "end"
-            )
+            sitInGrusha(10000, 1000)
+            Log.d(DebugTag, "end")
             doStopJob()
         }
     }
@@ -110,11 +95,7 @@ class HeatForegroundService : Service() {
         stopSelf(foregroundNotificationId)
     }
 
-    override fun onStartCommand(
-        intent: Intent?,
-        flags: Int,
-        startId: Int
-    ): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val extraData = intent?.extras?.getString(StopIntentTag)
         if (extraData != null) {
             needsToRun = false
@@ -131,10 +112,7 @@ class HeatForegroundService : Service() {
 
             createNotificationChannel()
             val notification = getNotification()
-            startForeground(
-                foregroundNotificationId,
-                notification
-            )
+            startForeground(foregroundNotificationId, notification)
             serviceHandler?.obtainMessage()?.also { msg ->
                 msg.arg1 = foregroundNotificationId
                 serviceHandler?.sendMessage(msg)
@@ -164,38 +142,23 @@ class HeatForegroundService : Service() {
     }
 
     private fun getNotification(): Notification {
-        val intentStop = HeatServiceReceiver.getBroadcastIntent(
-            applicationContext,
-            StopServiceTag
-        )
+        val intentStop = HeatServiceReceiver.getBroadcastIntent(applicationContext, StopServiceTag)
         val pendingIntentStop = PendingIntent.getBroadcast(
-            this,
-            0,
-            intentStop,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            this, 0, intentStop, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notification = NotificationCompat.Builder(
-            this,
-            HeatServiceChannelID
-        ).setContentTitle(getString(R.string.heat_service_notification_title))
+        val notification = NotificationCompat.Builder(this, HeatServiceChannelID)
+            .setContentTitle(getString(R.string.heat_service_notification_title))
             .setContentText(getString(R.string.heat_service_notification_text))
             .setSmallIcon(R.drawable.ic_launcher_background).setOngoing(true).setAutoCancel(false)
-            .addAction(
-                0,
-                getString(R.string.stop),
-                pendingIntentStop
-            ).build()
+            .addAction(0, getString(R.string.stop), pendingIntentStop).build()
 
         return notification
     }
 
     companion object {
         fun startService(context: Context) {
-            startForegroundService(
-                context,
-                HeatForegroundService::class.java
-            )
+            startForegroundService(context, HeatForegroundService::class.java)
         }
     }
 }

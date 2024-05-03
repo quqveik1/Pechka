@@ -26,60 +26,46 @@ class PermissionManager(private val activity: ComponentActivity) {
     }
 
     private fun setupPermissionRequest() {
-        permissionLauncher =
-            activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                if (isGranted) {
-                    Toast.makeText(
-                        activity,
-                        "NALIVAI",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        activity,
-                        "OTKAZ",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                this.isGrantedAfterRequest.value = isGranted
-                permissionViewModel.areAllLifePermissionsGranted.value = isGranted
+        permissionLauncher = activity.registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                Toast.makeText(activity, "NALIVAI", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(activity, "OTKAZ", Toast.LENGTH_SHORT).show()
             }
+            this.isGrantedAfterRequest.value = isGranted
+            permissionViewModel.areAllLifePermissionsGranted.value = isGranted
+        }
 
-        multiplePermissionLauncher =
-            activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                val allGranted = permissions.entries.all { it.value }
-                this.isGrantedAfterRequest.value = allGranted
-                permissionViewModel.areAllLifePermissionsGranted.value  = allGranted
-            }
+        multiplePermissionLauncher = activity.registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val allGranted = permissions.entries.all { it.value }
+            this.isGrantedAfterRequest.value = allGranted
+            permissionViewModel.areAllLifePermissionsGranted.value = allGranted
+        }
     }
 
-    private fun requestPermission(
-        permissionName: String,
-        isGranted: MutableState<Boolean?>
-    ) {
+    private fun requestPermission(permissionName: String, isGranted: MutableState<Boolean?>) {
         this.isGrantedAfterRequest = isGranted
         permissionLauncher.launch(permissionName)
     }
 
     private fun requestMultiplePermissions(
-        permissions: Array<String>,
-        isGranted: MutableState<Boolean?>
+        permissions: Array<String>, isGranted: MutableState<Boolean?>
     ) {
         this.isGrantedAfterRequest = isGranted
         multiplePermissionLauncher.launch(permissions)
     }
 
     fun requestAllPermissions(isGranted: MutableState<Boolean?>) {
-        requestMultiplePermissions(
-            lifePermissions,
-            isGranted
-        )
+        requestMultiplePermissions(lifePermissions, isGranted)
     }
 
     fun checkPermission(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
-            activity,
-            permission
+            activity, permission
         ) == PackageManager.PERMISSION_GRANTED
     }
 

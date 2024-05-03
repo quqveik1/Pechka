@@ -13,27 +13,18 @@ const val StopServiceTag = "stop"
 class HeatServiceReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val tag = intent.getStringExtra(PurposeMessageTag)
-        if(tag == StopServiceTag) {
-            val stopIntent = Intent(
-                context,
-                HeatForegroundService::class.java
-            )
+        if (tag == StopServiceTag) {
+            val stopIntent = Intent(context, HeatForegroundService::class.java)
             val gson = Gson()
             val json = gson.toJson(ServiceData(ServiceState.Stopped))
-            stopIntent.putExtra(
-                StopIntentTag,
-                json
-            )
+            stopIntent.putExtra(StopIntentTag, json)
             context.startService(stopIntent)
-            Log.d(
-                DebugTag,
-                "Service stopped by user."
-            )
+            Log.d(DebugTag, "Service stopped by user.")
         }
     }
 
     companion object {
-        fun getBroadcastIntent(context: Context, purposeString: String) : Intent {
+        fun getBroadcastIntent(context: Context, purposeString: String): Intent {
             val intent = Intent(context, HeatServiceReceiver::class.java)
             intent.putExtra(PurposeMessageTag, purposeString)
             return intent
