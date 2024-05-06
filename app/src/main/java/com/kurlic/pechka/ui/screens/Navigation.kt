@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
     val navController = rememberNavController()
 
     NavHost(
-        navController = navController, startDestination = MainScreenTag
+        navController = navController, startDestination = TestScreenTag
     ) {
         composable(MainScreenTag) {
             MainScreen(navController = navController)
