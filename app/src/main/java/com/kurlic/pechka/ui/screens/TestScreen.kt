@@ -27,10 +27,11 @@ const val TestScreenTag = "TestScreenTag"
                     .height(300.dp),
                 timeData = timeSetData
             )
+            /*
             Row {
                 StyledText(text = timeSetData.mutableHours.value.toString())
-                StyledText(text = timeSetData.mutableMinutes.value.toString())
-            }
+                SyledText(text = timeSetData.mutableMinutes.value.toString())
+            }*/
 
         }
     }

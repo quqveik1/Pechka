@@ -11,4 +11,6 @@
     <string name="stop">Stop</string>
     <string name="service_in_progress">Service is in progress</string>
     <string name="heat_service_channel_name">Heat Foreground service</string>
+    <string name="h_abbr">h</string>
+    <string name="m_abbr">m</string>
 </resources>

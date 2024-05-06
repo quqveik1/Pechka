@@ -1,4 +1,4 @@
-package com.kurlic.pechka.common.debug.services
+package com.kurlic.pechka.common.services
 
 import android.content.Context
 import android.content.Intent

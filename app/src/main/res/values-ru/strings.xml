@@ -12,4 +12,6 @@
     <string name="stop">Стоп</string>
     <string name="service_in_progress">Сервис работает</string>
     <string name="heat_service_channel_name">Фоновая служба обогрева</string>
+    <string name="h_abbr">ч</string>
+    <string name="m_abbr">м</string>
 </resources>

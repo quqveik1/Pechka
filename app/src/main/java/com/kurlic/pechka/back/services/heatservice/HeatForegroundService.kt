@@ -17,7 +17,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
 import com.kurlic.pechka.R
-import com.kurlic.pechka.common.debug.services.startForegroundService
+import com.kurlic.pechka.common.services.startForegroundService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 

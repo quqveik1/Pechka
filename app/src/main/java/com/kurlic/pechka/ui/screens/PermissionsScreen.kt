@@ -20,7 +20,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
-import com.kurlic.pechka.back.androidapi.permission.PermissionManager
 import com.kurlic.pechka.back.androidapi.permission.PermissionViewModel
 import com.kurlic.pechka.back.androidapi.permission.openSettings
 import com.kurlic.pechka.back.androidapi.permission.permissionToActionMap
