@@ -14,27 +14,19 @@ import com.kurlic.pechka.back.services.heatservice.ServiceData
 
 class ServiceViewModel : ViewModel() {
     var serviceData = MutableLiveData<ServiceData?>(null)
+
     init {
         Log.d("ViewModel", "ServiceViewModel created")
     }
 
     fun loadData(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            val prefs = context.getSharedPreferences(
-                ForegroundServiceFolder,
-                Context.MODE_PRIVATE
-            )
+            val prefs = context.getSharedPreferences(ForegroundServiceFolder, Context.MODE_PRIVATE)
 
-            val str = prefs.getString(
-                ForegroundServiceFolderDataTag,
-                null
-            )
+            val str = prefs.getString(ForegroundServiceFolderDataTag, null)
             val gson = Gson()
 
-            val newVal = gson.fromJson(
-                str,
-                ServiceData::class.java
-            )
+            val newVal = gson.fromJson(str, ServiceData::class.java)
             serviceData.postValue(newVal)
         }
     }

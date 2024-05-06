@@ -14,8 +14,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
 import com.kurlic.pechka.R
 
-@Composable
-fun StyledButton(
+@Composable fun StyledButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
