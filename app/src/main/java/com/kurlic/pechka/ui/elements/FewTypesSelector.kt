@@ -21,24 +21,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kurlic.pechka.R
 import com.kurlic.pechka.common.debug.makeToast
 
 @Composable @Preview fun FewTypesSelector(
     modifier: Modifier = Modifier, objectsList: List<String> = listOf("Piki", "Eshak", "Krok")
 ) {
-    val context = LocalContext.current
     val selectedItemIndex = rememberSaveable {
         mutableIntStateOf(objectsList.size / 2)
     }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .width(IntrinsicSize.Min)
             .height(IntrinsicSize.Min)
-            .clip(shape = RoundedCornerShape(15.dp))
+            .clip(shape = RoundedCornerShape(dimensionResource(id = R.dimen.shape_standard)))
             .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
         for (i in objectsList.indices) {

@@ -3,15 +3,20 @@ package com.kurlic.pechka.ui.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +27,7 @@ import com.kurlic.pechka.back.services.heatservice.HeatForegroundService
 import com.kurlic.pechka.back.services.heatservice.HeatServiceReceiver
 import com.kurlic.pechka.back.services.heatservice.ServiceState
 import com.kurlic.pechka.back.services.heatservice.StopServiceTag
+import com.kurlic.pechka.ui.elements.FewTypesSelector
 import com.kurlic.pechka.ui.elements.StyledButton
 import com.kurlic.pechka.ui.elements.StyledText
 import com.kurlic.pechka.ui.elements.TimeSetter
@@ -39,16 +45,25 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
             ViewModelProvider(context as MainActivity)[ServiceViewModel::class.java]
         val serviceData = serviceViewModel.serviceData.observeAsState()
         val timeData = rememberTimeDataState(0, 10)
+        val modeList = listOf("Light", "Middle", "Maximum")
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TimeSetter(modifier = Modifier.fillMaxWidth(), timeData)
 
+            FewTypesSelector(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(id = R.dimen.padding_standard),
+                        end = dimensionResource(id = R.dimen.padding_standard)
+                    ), modeList
+            )
+
             AnimatedVisibility(visible = serviceData.value?.state != ServiceState.Active) {
-                StyledButton(
-                    text = stringResource(id = R.string.start_heating_service) + "!",
-                    onClick = {
-                        HeatForegroundService.startService(context)
-                    })
+                StyledButton(text = stringResource(id = R.string.start_heating_service) + "!",
+                             onClick = {
+                                 HeatForegroundService.startService(context)
+                             })
             }
             AnimatedVisibility(visible = serviceData.value?.state == ServiceState.Active) {
                 Column(modifier = Modifier) {
