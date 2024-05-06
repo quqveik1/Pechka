@@ -59,6 +59,7 @@ import kotlinx.coroutines.launch
     ) {
         val boxMaxWidthVal = maxWidth.value
         val fontSize = (boxMaxWidthVal * 0.2f).toSp(LocalDensity.current)
+        val fontTextSize = (boxMaxWidthVal * 0.05f).toSp(LocalDensity.current)
         Row(
         ) {
 
@@ -92,7 +93,7 @@ import kotlinx.coroutines.launch
                         end.linkTo(parent.end)
                     },
                     text = stringResource(id = R.string.h_abbr) + " " + stringResource(id = R.string.m_abbr),
-                    fontSize = 30.sp
+                    fontSize = fontTextSize
                 )
             }
             CyclicLazyTimeList(

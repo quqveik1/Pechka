@@ -23,7 +23,8 @@ val DarkColorScheme = darkColorScheme(
     onBackground = WhiteCupertino,
     onSurface = WhiteCupertino,
     error = RedCupertino,
-    onError = WhiteCupertino
+    onError = WhiteCupertino,
+    onPrimaryContainer = BlueCupertinoDark
 )
 
 val LightColorScheme = lightColorScheme(
@@ -38,7 +39,8 @@ val LightColorScheme = lightColorScheme(
     onBackground = BlackCupertinoText,
     onSurface = BlackCupertinoText,
     error = RedCupertinoLight,
-    onError = WhiteCupertinoText
+    onError = WhiteCupertinoText,
+    onPrimaryContainer = GreenCupertinoLighter
 )
 
 @Composable fun PechkaTheme(
