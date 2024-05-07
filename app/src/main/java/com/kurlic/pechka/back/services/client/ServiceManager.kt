@@ -5,16 +5,15 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import com.kurlic.pechka.MainActivity
-import com.kurlic.pechka.back.services.heatservice.ForegroundServiceBroadCast
 
 class ServiceManager(private val activity: MainActivity) {
 
-    private val serviceMessagesReceiver = ServiceMessagesReceiver()
+    private val serviceMessagesReceiver = AppServiceMessagesReceiver()
     private val serviceViewModel = ViewModelProvider(activity)[ServiceViewModel::class.java]
 
     init {
         serviceViewModel.loadData(activity)
-        val filter = IntentFilter(ForegroundServiceBroadCast)
+        val filter = IntentFilter(AppServiceReceiver)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             activity.registerReceiver(serviceMessagesReceiver, filter, Context.RECEIVER_EXPORTED)
         } else {

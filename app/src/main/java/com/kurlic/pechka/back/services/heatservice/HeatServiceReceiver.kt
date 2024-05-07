@@ -6,14 +6,10 @@ import android.content.Intent
 import android.util.Log
 import com.google.gson.Gson
 
-const val PurposeMessageTag = "purpose"
-
-const val StopServiceTag = "stop"
-
 class HeatServiceReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val tag = intent.getStringExtra(PurposeMessageTag)
-        if (tag == StopServiceTag) {
+        if (tag == HeatServiceMessageType.StopServiceTag.name) {
             val stopIntent = Intent(context, HeatForegroundService::class.java)
             val gson = Gson()
             val json = gson.toJson(ServiceData(ServiceState.Stopped))

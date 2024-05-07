@@ -17,13 +17,11 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
 import com.kurlic.pechka.R
+import com.kurlic.pechka.back.services.client.AppServiceReceiver
 import com.kurlic.pechka.common.services.startForegroundService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-const val ForegroundServiceBroadCast = "com.kurlic.pechka.HeatForegroundService"
-const val ForegroundServiceFolder = "HeatForegroundService"
-const val ForegroundServiceFolderDataTag = "HeatForegroundService"
 const val DebugTag = "HeatForegroundService"
 const val StopIntentTag = "StopHeatForegroundService"
 
@@ -32,6 +30,7 @@ class HeatForegroundService : Service() {
     private var serviceHandler: ServiceHandler? = null
 
     private var serviceData = BehaviorSubject.createDefault(ServiceData(ServiceState.Launching))
+    private var serviceDataMutableFromActivity = ServiceDataMutableFromActivity()
     private val disposables = CompositeDisposable()
 
     private var needsToRun = true
@@ -61,7 +60,7 @@ class HeatForegroundService : Service() {
     }
 
     private fun sendBroadcastToApp() {
-        val intent = Intent(ForegroundServiceBroadCast)
+        val intent = Intent(AppServiceReceiver)
         sendBroadcast(intent)
     }
 
@@ -142,7 +141,7 @@ class HeatForegroundService : Service() {
     }
 
     private fun getNotification(): Notification {
-        val intentStop = HeatServiceReceiver.getBroadcastIntent(applicationContext, StopServiceTag)
+        val intentStop = HeatServiceReceiver.getBroadcastIntent(applicationContext, HeatServiceMessageType.StopServiceTag.name)
         val pendingIntentStop = PendingIntent.getBroadcast(
             this, 0, intentStop, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )

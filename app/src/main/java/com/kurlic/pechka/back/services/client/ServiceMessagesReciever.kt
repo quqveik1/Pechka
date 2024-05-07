@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.common.debug.makeToast
 
-class ServiceMessagesReceiver : BroadcastReceiver() {
+const val AppServiceReceiver = "com.kurlic.pechka.back.services.ServiceMessagesReceiver"
+
+class AppServiceMessagesReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("vbu", "BroadcastBecome")
         val viewModel = ViewModelProvider(context as MainActivity)[ServiceViewModel::class.java]

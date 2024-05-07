@@ -24,9 +24,9 @@ import com.kurlic.pechka.MainActivity
 import com.kurlic.pechka.R
 import com.kurlic.pechka.back.services.client.ServiceViewModel
 import com.kurlic.pechka.back.services.heatservice.HeatForegroundService
+import com.kurlic.pechka.back.services.heatservice.HeatServiceMessageType
 import com.kurlic.pechka.back.services.heatservice.HeatServiceReceiver
 import com.kurlic.pechka.back.services.heatservice.ServiceState
-import com.kurlic.pechka.back.services.heatservice.StopServiceTag
 import com.kurlic.pechka.ui.elements.FewTypesSelector
 import com.kurlic.pechka.ui.elements.StyledButton
 import com.kurlic.pechka.ui.elements.StyledText
@@ -69,7 +69,7 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
                 Column(modifier = Modifier) {
                     StyledText(text = stringResource(id = R.string.service_in_progress))
                     StyledButton(text = stringResource(id = R.string.stop), onClick = {
-                        HeatServiceReceiver.sendBroadcastMessage(context, StopServiceTag)
+                        HeatServiceReceiver.sendBroadcastMessage(context, HeatServiceMessageType.StopServiceTag.name)
                     }, modifier = Modifier.align(Alignment.CenterHorizontally))
                 }
             }
