@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
@@ -91,7 +92,7 @@ class HeatForegroundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val extraData = intent?.extras
-        if(extraData == null) {
+        if (extraData == null) {
             Log.e(DebugTag, "To HeatForegroundService provided null data")
             throw KotlinNullPointerException("To HeatForegroundService provided null data")
         }
@@ -100,28 +101,34 @@ class HeatForegroundService : Service() {
 
         if (type == HeatServiceMessageType.StopServiceTag.name) {
             needsToRun = false
-        } else if(type == HeatServiceMessageType.StartServiceTag.name) {
-
-            HandlerThread("ServiceStartArguments").apply {
-                start()
-
-                serviceLooper = looper
-                serviceHandler = ServiceHandler(looper)
-            }
-
-            foregroundNotificationId = startId
-
-            createNotificationChannel()
-            val notification = getNotification()
-            startForeground(foregroundNotificationId, notification)
-            serviceHandler?.obtainMessage()?.also { msg ->
-                msg.arg1 = foregroundNotificationId
-                serviceHandler?.sendMessage(msg)
-            }
-
-            serviceData.onNext(ServiceData(ServiceState.Active))
+        } else if (type == HeatServiceMessageType.StartServiceTag.name) {
+            serviceStartWork(startId, extraData)
         }
         return START_NOT_STICKY
+    }
+
+    private fun serviceStartWork(startId: Int, data: Bundle) {
+        HandlerThread("ServiceStartArguments").apply {
+            start()
+
+            serviceLooper = looper
+            serviceHandler = ServiceHandler(looper)
+        }
+
+        serviceDataMutableFromActivity = Gson().fromJson(data.getString(IntentDataMessageTag), ServiceDataMutableFromActivity::class.java)
+        Log.d(DebugTag, serviceDataMutableFromActivity.toString())
+
+        foregroundNotificationId = startId
+
+        createNotificationChannel()
+        val notification = getNotification()
+        startForeground(foregroundNotificationId, notification)
+        serviceHandler?.obtainMessage()?.also { msg ->
+            msg.arg1 = foregroundNotificationId
+            serviceHandler?.sendMessage(msg)
+        }
+
+        serviceData.onNext(ServiceData(ServiceState.Active))
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -143,22 +150,25 @@ class HeatForegroundService : Service() {
     }
 
     private fun getNotification(): Notification {
-        val intentStop = HeatServiceReceiver.getBroadcastIntent(applicationContext, HeatServiceMessageType.StopServiceTag.name)
+        val intentStop = HeatServiceReceiver.getBroadcastIntent(
+            applicationContext, HeatServiceMessageType.StopServiceTag.name
+        )
         val pendingIntentStop = PendingIntent.getBroadcast(
             this, 0, intentStop, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notification = NotificationCompat.Builder(this, HeatServiceChannelID)
+        return NotificationCompat.Builder(this, HeatServiceChannelID)
             .setContentTitle(getString(R.string.heat_service_notification_title))
             .setContentText(getString(R.string.heat_service_notification_text))
             .setSmallIcon(R.drawable.ic_launcher_background).setOngoing(true).setAutoCancel(false)
             .addAction(0, getString(R.string.stop), pendingIntentStop).build()
-
-        return notification
     }
 
     companion object {
-        fun startService(contextT: Context, serviceDataMutableFromActivity: ServiceDataMutableFromActivity) {
+        fun startService(
+            contextT: Context,
+            serviceDataMutableFromActivity: ServiceDataMutableFromActivity
+        ) {
             val intent = Intent(contextT, HeatForegroundService::class.java)
             intent.putExtra(PurposeMessageTag, HeatServiceMessageType.StartServiceTag.name)
             intent.putExtra(IntentDataMessageTag, Gson().toJson(serviceDataMutableFromActivity))

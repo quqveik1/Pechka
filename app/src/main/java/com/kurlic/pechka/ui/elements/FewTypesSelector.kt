@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +30,12 @@ import com.kurlic.pechka.R
 import com.kurlic.pechka.common.debug.makeToast
 
 @Composable @Preview fun FewTypesSelector(
-    modifier: Modifier = Modifier, objectsList: List<String> = listOf("Piki", "Eshak", "Krok")
-) {
-    val selectedItemIndex = rememberSaveable {
+    modifier: Modifier = Modifier,
+    objectsList: List<String> = listOf("Piki", "Eshak", "Krok"),
+    selectedItemIndex: MutableIntState = remember {
         mutableIntStateOf(objectsList.size / 2)
     }
+) {
 
     Row(
         modifier = modifier
@@ -43,7 +46,8 @@ import com.kurlic.pechka.common.debug.makeToast
             .background(color = MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
         for (i in objectsList.indices) {
-            val alpha: Float by animateFloatAsState(if (selectedItemIndex.intValue == i) 1f else 0f)
+            val alpha: Float by animateFloatAsState(targetValue = if (selectedItemIndex.intValue == i) 1f else 0f,
+                                                    label = "Selection Alpha Animation")
             val selectedColor = MaterialTheme.colorScheme.primary
             Box(
                 modifier = Modifier
