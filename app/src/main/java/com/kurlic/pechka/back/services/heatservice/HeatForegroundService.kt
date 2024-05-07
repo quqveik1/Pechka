@@ -18,12 +18,12 @@ import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
 import com.kurlic.pechka.R
 import com.kurlic.pechka.back.services.client.AppServiceReceiver
+import com.kurlic.pechka.common.services.launchForegroundService
 import com.kurlic.pechka.common.services.startForegroundService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
 const val DebugTag = "HeatForegroundService"
-const val StopIntentTag = "StopHeatForegroundService"
 
 class HeatForegroundService : Service() {
     private var serviceLooper: Looper? = null
@@ -44,17 +44,12 @@ class HeatForegroundService : Service() {
 
     private fun createObserver() {
         disposables.add(serviceData.subscribe { data ->
-            saveData(data)
+            saveServiceData(data)
         })
     }
 
-    private fun saveData(data: ServiceData) {
-        val prefs = getSharedPreferences(ForegroundServiceFolder, Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        val gson = Gson()
-        val json = gson.toJson(data)
-        editor.putString(ForegroundServiceFolderDataTag, json)
-        editor.apply()
+    private fun saveServiceData(data: ServiceData) {
+        saveData(applicationContext, ForegroundServiceFolderDataTag, data)
 
         sendBroadcastToApp()
     }
@@ -95,10 +90,17 @@ class HeatForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val extraData = intent?.extras?.getString(StopIntentTag)
-        if (extraData != null) {
+        val extraData = intent?.extras
+        if(extraData == null) {
+            Log.e(DebugTag, "To HeatForegroundService provided null data")
+            throw KotlinNullPointerException("To HeatForegroundService provided null data")
+        }
+
+        val type = extraData.getString(PurposeMessageTag)
+
+        if (type == HeatServiceMessageType.StopServiceTag.name) {
             needsToRun = false
-        } else {
+        } else if(type == HeatServiceMessageType.StartServiceTag.name) {
 
             HandlerThread("ServiceStartArguments").apply {
                 start()
@@ -156,8 +158,11 @@ class HeatForegroundService : Service() {
     }
 
     companion object {
-        fun startService(context: Context) {
-            startForegroundService(context, HeatForegroundService::class.java)
+        fun startService(contextT: Context, serviceDataMutableFromActivity: ServiceDataMutableFromActivity) {
+            val intent = Intent(contextT, HeatForegroundService::class.java)
+            intent.putExtra(PurposeMessageTag, HeatServiceMessageType.StartServiceTag.name)
+            intent.putExtra(IntentDataMessageTag, Gson().toJson(serviceDataMutableFromActivity))
+            launchForegroundService(contextT, intent)
         }
     }
 }

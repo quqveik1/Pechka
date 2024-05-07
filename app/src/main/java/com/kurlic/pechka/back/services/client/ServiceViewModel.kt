@@ -9,11 +9,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.google.gson.Gson
 import com.kurlic.pechka.back.services.heatservice.ForegroundServiceFolder
+import com.kurlic.pechka.back.services.heatservice.ForegroundServiceFolderDataMutableFromActivityTag
 import com.kurlic.pechka.back.services.heatservice.ForegroundServiceFolderDataTag
 import com.kurlic.pechka.back.services.heatservice.ServiceData
+import com.kurlic.pechka.back.services.heatservice.ServiceDataMutableFromActivity
+import com.kurlic.pechka.back.services.heatservice.loadStoredData
 
 class ServiceViewModel : ViewModel() {
     var serviceData = MutableLiveData<ServiceData?>(null)
+    var serviceMutableData = MutableLiveData<ServiceDataMutableFromActivity?>(null)
 
     init {
         Log.d("ViewModel", "ServiceViewModel created")
@@ -21,13 +25,10 @@ class ServiceViewModel : ViewModel() {
 
     fun loadData(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            val prefs = context.getSharedPreferences(ForegroundServiceFolder, Context.MODE_PRIVATE)
-
-            val str = prefs.getString(ForegroundServiceFolderDataTag, null)
-            val gson = Gson()
-
-            val newVal = gson.fromJson(str, ServiceData::class.java)
+            val newVal: ServiceData? = loadStoredData(context, ForegroundServiceFolderDataTag)
             serviceData.postValue(newVal)
+            val newMutableVal: ServiceDataMutableFromActivity? = loadStoredData(context, ForegroundServiceFolderDataMutableFromActivityTag)
+            serviceMutableData.postValue(newMutableVal)
         }
     }
 }

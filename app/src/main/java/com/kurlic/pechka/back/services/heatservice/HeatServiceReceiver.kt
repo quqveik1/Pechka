@@ -11,9 +11,10 @@ class HeatServiceReceiver : BroadcastReceiver() {
         val tag = intent.getStringExtra(PurposeMessageTag)
         if (tag == HeatServiceMessageType.StopServiceTag.name) {
             val stopIntent = Intent(context, HeatForegroundService::class.java)
+            stopIntent.putExtra(PurposeMessageTag, HeatServiceMessageType.StopServiceTag.name)
             val gson = Gson()
             val json = gson.toJson(ServiceData(ServiceState.Stopped))
-            stopIntent.putExtra(StopIntentTag, json)
+            stopIntent.putExtra(IntentDataMessageTag, json)
             context.startService(stopIntent)
             Log.d(DebugTag, "Service stopped by user.")
         }

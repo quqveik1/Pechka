@@ -26,6 +26,7 @@ import com.kurlic.pechka.back.services.client.ServiceViewModel
 import com.kurlic.pechka.back.services.heatservice.HeatForegroundService
 import com.kurlic.pechka.back.services.heatservice.HeatServiceMessageType
 import com.kurlic.pechka.back.services.heatservice.HeatServiceReceiver
+import com.kurlic.pechka.back.services.heatservice.ServiceDataMutableFromActivity
 import com.kurlic.pechka.back.services.heatservice.ServiceState
 import com.kurlic.pechka.ui.elements.FewTypesSelector
 import com.kurlic.pechka.ui.elements.StyledButton
@@ -62,7 +63,7 @@ fun HeatModeSelectScreen(navController: NavController = rememberNavController())
             AnimatedVisibility(visible = serviceData.value?.state != ServiceState.Active) {
                 StyledButton(text = stringResource(id = R.string.start_heating_service) + "!",
                              onClick = {
-                                 HeatForegroundService.startService(context)
+                                 HeatForegroundService.startService(context, ServiceDataMutableFromActivity())
                              })
             }
             AnimatedVisibility(visible = serviceData.value?.state == ServiceState.Active) {

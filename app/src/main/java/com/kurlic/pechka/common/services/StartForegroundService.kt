@@ -12,3 +12,11 @@ fun startForegroundService(context: Context, service: Class<*>) {
         context.startService(intent)
     }
 }
+
+fun launchForegroundService(context: Context, intent: Intent) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        context.startForegroundService(intent)
+    } else {
+        context.startService(intent)
+    }
+}
